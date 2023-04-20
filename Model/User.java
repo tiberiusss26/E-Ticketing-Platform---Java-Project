@@ -16,7 +16,7 @@ public class User{
     protected String password;
     protected Date creationDate;
 
-    private String salt;
+    private final String salt;
 
     public User(String username, String password) throws NoSuchAlgorithmException {
         this.username = username;
@@ -71,9 +71,4 @@ public class User{
         return Objects.equals(password, user.password);
     }
 
-    public static void main(String[] args) throws NoSuchAlgorithmException {
-        User u = new User("tibi","parola");
-        System.out.println(u.authentication("parola"));
-    }
 }
-
