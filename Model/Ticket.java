@@ -7,22 +7,17 @@ public class Ticket implements Comparable<Ticket>{
     private final Date purchaseDate;
     private final Event event;
     private final Location location;
-    boolean valid = true;
+
 
     public Ticket(double price, Date purchaseDate, Event event, Location location, boolean valid) {
         this.price = price;
         this.purchaseDate = new Date();
         this.event = event;
         this.location = location;
-        this.valid = valid;
     }
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public void setValid(boolean valid) {
-        this.valid = valid;
     }
 
     public double getPrice() {
@@ -41,13 +36,19 @@ public class Ticket implements Comparable<Ticket>{
         return location;
     }
 
-    public boolean isValid() {
-        return valid;
-    }
-
     @Override
     public int compareTo(Ticket t) {
         if (this.price == t.getPrice()) return 0;
         return this.price > t.getPrice() ? 1 : -1;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "price=" + price +
+                ", purchaseDate=" + purchaseDate +
+                ", event=" + event +
+                ", location=" + location +
+                '}';
     }
 }

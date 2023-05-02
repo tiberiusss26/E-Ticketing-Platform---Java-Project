@@ -1,5 +1,6 @@
 package Model;
 
+import Exceptions.LoginException;
 import org.w3c.dom.xpath.XPathResult;
 
 import java.security.MessageDigest;
@@ -25,7 +26,7 @@ public class User{
         creationDate = new Date();
     }
 
-    public boolean authentication(String input) throws NoSuchAlgorithmException {
+    public boolean authentication(String input) throws LoginException {
         String newPass = get_SHA_512_SecurePassword(input, salt);
         return newPass.equals(this.password);
     }
