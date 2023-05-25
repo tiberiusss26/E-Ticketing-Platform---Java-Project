@@ -1,29 +1,38 @@
-package Model;
+package model;
 
-import Exceptions.LoginException;
-import org.w3c.dom.xpath.XPathResult;
+import exceptions.LoginException;
 
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Objects;
 
-import static Model.passHashing.getSalt;
-import static Model.passHashing.get_SHA_512_SecurePassword;
+import static model.passHashing.getSalt;
+import static model.passHashing.get_SHA_512_SecurePassword;
 
-public class User{
+public class User {
     protected String username;
     protected String password;
-    protected Date creationDate;
+    protected java.sql.Date creationDate;
 
     private final String salt;
+
+    public User(String username, String password, java.sql.Date creationDate) throws NoSuchAlgorithmException {
+        this.username = username;
+        this.creationDate = creationDate;
+        this.salt = getSalt();
+        this.password = password;
+    }
 
     public User(String username, String password) throws NoSuchAlgorithmException {
         this.username = username;
         this.salt = getSalt();
         this.password = get_SHA_512_SecurePassword(password, this.salt);
-        creationDate = new Date();
+        Date date = new Date();
+        int year = date.getYear();
+        int month = date.getMonth();
+        int day = date.getDate();
+
+        creationDate = new java.sql.Date(year, month, day);
     }
 
     public boolean authentication(String input) throws LoginException {
@@ -60,9 +69,10 @@ public class User{
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(java.sql.Date creationDate) {
         this.creationDate = creationDate;
     }
+
 
     @Override
     public boolean equals(Object o) {

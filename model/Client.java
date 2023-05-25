@@ -1,17 +1,23 @@
-package Model;
+package model;
 
-import Exceptions.AvailabilityException;
-import Exceptions.BalanceException;
-import Exceptions.LoginException;
+import exceptions.AvailabilityException;
+import exceptions.BalanceException;
+import exceptions.LoginException;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Client extends User {
 
     private List<Ticket> Inventory;
     private double creditScore;
+
+    public Client(String username, String password, Date creationDate, double creditScore) throws NoSuchAlgorithmException {
+        super(username, password, (java.sql.Date) creationDate);
+        this.creditScore = creditScore;
+    }
 
     public Client(String username, String password) throws LoginException, NoSuchAlgorithmException {
         super(username, password);

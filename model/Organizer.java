@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -11,6 +11,7 @@ public class Organizer extends User{
     private double balance;
 
     private Set<Event> events;
+
 
     public Organizer(String username, String password) throws NoSuchAlgorithmException {
         super(username, password);

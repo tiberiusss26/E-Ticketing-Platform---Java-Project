@@ -1,9 +1,8 @@
-package Model;
+package model;
 
 import java.util.Date;
 
 public class Event {
-
     private final String name;
     private final Date date;
     private long availableTickets;

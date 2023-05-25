@@ -1,9 +1,9 @@
-package Service;
+package service;
 
-import Exceptions.LoginException;
-import Model.Client;
-import Model.Organizer;
-import Model.User;
+import exceptions.LoginException;
+import model.Client;
+import model.Organizer;
+import model.User;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -42,19 +42,16 @@ public class UserService {
         organizers.sort(Comparator.comparing(Organizer::getBalance));
         System.out.println(organizers);
     }
-
-    public Client getClientByUsername(String username) {
+    public Optional<Client> getClientByUsername(String username) {
         return clients.stream()
                 .filter(c -> c.getUsername().equalsIgnoreCase(username))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Client not found!"));
+                .findAny();
     }
 
-    public Organizer getOrganizertByUsername(String username) {
+    public Optional<Organizer> getOrganizertByUsername(String username) {
         return organizers.stream()
                 .filter(c -> c.getUsername().equalsIgnoreCase(username))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Organizer not found!"));
+                .findAny();
     }
 
 
@@ -72,23 +69,27 @@ public class UserService {
         }
     }
 
-    public User registerUser(String username, String password) throws LoginException, NoSuchAlgorithmException {
+    public User registerUser(String username, String password, String type) throws LoginException, NoSuchAlgorithmException {
         User newUser = new User(username, password);
-        return newUser;
+        return createUser(newUser, type);
     }
 
-    public User createUser(User newUser) throws LoginException, NoSuchAlgorithmException {
-        String username = getClientByUsername(newUser.getUsername()).getUsername();
-        if (username.isEmpty()) {
-            username = getOrganizertByUsername(newUser.getUsername()).getUsername();
-        }
-        if (!username.isEmpty()) {
+    public User createUser(User newUser, String type) throws NoSuchAlgorithmException {
+        Optional<Client> client = getClientByUsername(newUser.getUsername());
+        if(client.isPresent()){
             throw new LoginException("Username not valid!");
         }
+        else{
+            Optional<Organizer> organizer = getOrganizertByUsername(newUser.getUsername());
+            if(organizer.isPresent()){
+                throw new LoginException("Username not valid!");
+            }
+        }
+
         String usern = newUser.getUsername();
         String pass = newUser.getPassword();
-        if (newUser.getClass().toString().equals("class Model.Client")) {
-            Client newUser1 = new Client(usern,pass);
+        if (type.equals("client")) {
+            Client newUser1 = new Client(usern, pass);
             clients.add(newUser1);
         } else {
             Organizer newUser1 = new Organizer(usern, pass);
