@@ -13,6 +13,13 @@ public class Organizer extends User{
     private Set<Event> events;
 
 
+    public Organizer(String username, String password, Date creationDate, String name, String companyName, double balance) throws NoSuchAlgorithmException {
+        super(username, password, (java.sql.Date) creationDate);
+        this.name = name;
+        this.companyName = companyName;
+        this.balance = balance;
+    }
+
     public Organizer(String username, String password) throws NoSuchAlgorithmException {
         super(username, password);
         balance = 0;
@@ -20,6 +27,14 @@ public class Organizer extends User{
 
     public double getBalance() {
         return balance;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCompanyName() {
+        return companyName;
     }
 
     public void setName(String name) {
