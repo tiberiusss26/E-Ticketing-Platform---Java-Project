@@ -14,7 +14,7 @@ public class Organizer extends User{
 
 
     public Organizer(String username, String password, Date creationDate, String name, String companyName, double balance) throws NoSuchAlgorithmException {
-        super(username, password, (java.sql.Date) creationDate);
+        super(username, password,  creationDate);
         this.name = name;
         this.companyName = companyName;
         this.balance = balance;
@@ -57,9 +57,9 @@ public class Organizer extends User{
     @Override
     public String toString() {
         return "Organizer{" +
-                "name='" + name + '\'' +
-                ", companyName='" + companyName + '\'' +
-                ", balance=" + balance +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", creationDate=" + creationDate +
                 '}';
     }
 }

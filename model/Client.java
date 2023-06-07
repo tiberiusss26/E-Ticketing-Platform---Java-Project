@@ -15,7 +15,7 @@ public class Client extends User {
     private double creditScore;
 
     public Client(String username, String password, Date creationDate, double creditScore) throws NoSuchAlgorithmException {
-        super(username, password, (java.sql.Date) creationDate);
+        super(username, password,  creationDate);
         this.creditScore = creditScore;
     }
 

@@ -3,14 +3,18 @@ package repositories;
 import com.mysql.cj.xdevapi.RemoveStatement;
 import database.MySqlConnection;
 import model.Client;
+import model.Event;
 import model.User;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public class ClientRepository implements IUserRepository {
@@ -24,6 +28,32 @@ public class ClientRepository implements IUserRepository {
         this.connection = connection;
     }
 
+    private static final String listClients =
+            "SELECT username, password, creationDate, creditScore FROM client";
+    public List<Client> listClients() {
+        try {
+            Statement statement = connection.getConnection().createStatement();
+            ResultSet rs = statement.executeQuery(listClients);
+
+            List<Client> clients = new ArrayList<>();
+
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String hash = rs.getString("password");
+                Date dateTime = rs.getObject("creationDate", Date.class);
+                double creditScore = rs.getDouble("creditScore");
+
+                Client client = new Client(username,hash,dateTime,creditScore);
+                clients.add(client);
+            }
+
+            return clients;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public Optional<User> getUserByUsername(String username) {
@@ -38,9 +68,7 @@ public class ClientRepository implements IUserRepository {
             Date dateTime = rs.getObject("creationDate", Date.class);
             double credit = rs.getDouble("creditScore");
 
-            Client client = new Client(username, hash, dateTime, credit);
-
-            return Optional.of(client);
+            return Optional.of(new Client(username, hash, dateTime, credit));
 
 
         } catch (SQLException | NoSuchAlgorithmException e) {

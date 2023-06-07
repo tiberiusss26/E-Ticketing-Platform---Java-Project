@@ -9,7 +9,10 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public class OrganizerRepository implements IUserRepository {
@@ -19,10 +22,39 @@ public class OrganizerRepository implements IUserRepository {
     private static final String InsertOrganizer = "INSERT INTO organizer VALUES (?,?,?,?,?,?)";
     private static final String DeleteOrganizer = "DELETE FROM organizer where username = ? ";
 
+    private static final String listOrganizers =
+            "SELECT username, password, creationDate, name, companyName, balance FROM organizer";
+
     public OrganizerRepository(MySqlConnection connection) {
         this.connection = connection;
     }
 
+    public List<Organizer> listOrganizers() {
+        try {
+            Statement statement = connection.getConnection().createStatement();
+            ResultSet rs = statement.executeQuery(listOrganizers);
+
+            List<Organizer> organizers = new ArrayList<>();
+
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String hash = rs.getString("password");
+                Date dateTime = rs.getObject("creationDate", Date.class);
+                String name = rs.getString("name");
+                String companyName = rs.getString("companyName");
+                double balance = rs.getDouble("balance");
+
+                Organizer organizer = new Organizer(username,hash,dateTime,name, companyName,balance);
+                organizers.add(organizer);
+            }
+
+            return organizers;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public Optional<User> getUserByUsername(String username) {
@@ -35,13 +67,12 @@ public class OrganizerRepository implements IUserRepository {
             }
             String hash = rs.getString("password");
             Date dateTime = rs.getObject("creationDate", Date.class);
-            double balance = rs.getDouble("balance");
             String name = rs.getString("name");
             String companyName = rs.getString("companyName");
+            double balance = rs.getDouble("balance");
 
-            Organizer organizer = new Organizer(username, hash, dateTime, name, companyName, balance);
 
-            return Optional.of(organizer);
+            return Optional.of(new Organizer(username, hash, dateTime, name, companyName, balance));
 
 
         } catch (SQLException | NoSuchAlgorithmException e) {

@@ -35,6 +35,10 @@ public class Location {
         this.capacity = capacity;
     }
 
+    public Location(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "Location{" +

@@ -12,11 +12,11 @@ import static model.passHashing.get_SHA_512_SecurePassword;
 public class User {
     protected String username;
     protected String password;
-    protected java.sql.Date creationDate;
+    protected Date creationDate;
 
     private final String salt;
 
-    public User(String username, String password, java.sql.Date creationDate) throws NoSuchAlgorithmException {
+    public User(String username, String password, Date creationDate) throws NoSuchAlgorithmException {
         this.username = username;
         this.creationDate = creationDate;
         this.salt = getSalt();
